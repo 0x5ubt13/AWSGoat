@@ -32,14 +32,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Install Terraform
+    - name: Install Terraform 
       run: |
         echo "Installing Terraform"
-        sudo apt-get update && sudo apt-get install -y wget unzip
-        wget https://releases.hashicorp.com/terraform/1.0.11/terraform_1.10.4_linux_amd64.zip
-        unzip terraform_1.10.4_linux_amd64.zip
-        sudo mv terraform /usr/local/bin/
-        terraform --version
+        wget -O - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+        sudo apt update && sudo apt install terraform
 
     - name: Set Account ID
       id: account
